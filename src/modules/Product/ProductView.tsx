@@ -11,19 +11,20 @@ const ProductView = () => {
   return (
     <div className="realtive md-4">
       <h1 className="text-3xl text-center font-bold">Products Lists</h1>
-      <div>
+      <div className="flex justify-between">
       <ProductAddEditDialog isEdit={false}>
-        <Button className="bg-blue-300 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded my-3 ml-3">Add Product</Button>
+        <Button className="bg-blue-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded my-3 ml-3">Add Product</Button>
       </ProductAddEditDialog>
-      </div>
-      <div className="absolute top-20 right-10 flex items-center mb-5">
-        <ShoppingBasketIcon className="w-10 h-10 text-pink-500" />
+      <div className="mr-3">
+        <ShoppingBasketIcon className="w-10 h-10 text-blue-300" />
 
         {/* <span
           class="absolute top-0 right-5 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-pink-500 rounded-full">
           {{ cartItemCount }}
         </span> */}
       </div>
+      </div>
+     
       <ProductTable columns={columns} data={products ?? []} />
     </div>
   )

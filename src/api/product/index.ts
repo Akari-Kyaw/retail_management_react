@@ -1,7 +1,7 @@
 import { useMutation, UseMutationOptions, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
-import axios from "axios";
-import { AddProductType, getAllProductsType } from "./type";
+import { AddProductType, DeleteProductType, getAllProductsType } from "./type";
 import { ProductType } from "../../shared/type";
+import axios from "axios";
 
 export const getAllProducts = {
     useQuery: (opt?: Partial<UseQueryOptions<unknown, Error, Array<getAllProductsType>>>, onError?: () => void) => {
@@ -34,7 +34,7 @@ export const AddProduct = {
             },
             onSuccess: async () => {
                 await queryClient.invalidateQueries(({
-                    queryKey: ['GetAllProducts']
+                    queryKey: ['getAllProducts']
                 }))
             },
             ...opt
@@ -53,10 +53,34 @@ export const UpdateProduct = {
             },
             onSuccess: async () => {
                 await queryClient.invalidateQueries(({
-                    queryKey: ['GetAllProducts']
+                    queryKey: ['getAllProducts']
                 }))
             },
             ...opt
         })
     }
 }
+export const deleteProduct= {
+    useMutation: (opt?: UseMutationOptions<unknown, Error, DeleteProductType, unknown>) => {
+        const queryClient = useQueryClient()
+        return useMutation({
+            mutationKey: ['DeleteProduct'],
+            mutationFn: ( DeleteProductType) => {
+                return axios.delete('Product/DeleteProduct', {data: DeleteProductType})
+            },
+            onSuccess: async () => {
+                await queryClient.invalidateQueries(({
+                    queryKey: ['getAllProducts']
+                }))
+            },
+            ...opt
+        })
+    }
+}
+
+// export const DeleteProduct=async (payload: DeleteProductType): Promise<any> => {
+//     const response = await axios.delete(`Product/DeleteProduct`, {
+//       data: payload,
+//     });
+//     return response.data;
+//   };
