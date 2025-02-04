@@ -2,9 +2,10 @@
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from "../../components/ui/navigation-menu"
 import { LogoutDialog } from "../../components/dialogs"
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar"
-
+import Cookies from "js-cookie"
 
 const ProfileBox = () => {
+	const username=Cookies.get("username")
 	return (
 		<NavigationMenu>
 			<NavigationMenuList>
@@ -20,11 +21,9 @@ const ProfileBox = () => {
 							</Avatar>
 							<div className="text-left">
 								<h5 className="text-[13px] font-semibold">
-									Rudeus Greyrat
+									{username}
 								</h5>
-								<p className="text-primary text-[10px]">
-									HR Manager
-								</p>
+								
 							</div>
 						</div>
 					</NavigationMenuTrigger>

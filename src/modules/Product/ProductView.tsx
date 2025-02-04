@@ -1,28 +1,34 @@
-import { ShoppingBasketIcon } from "lucide-react";
+import { LucideShoppingBasket} from "lucide-react";
 import api from "../../api";
 import { Button } from "../../components/ui/button";
 import { columns } from "./chunks/Productcolums";
 import ProductAddEditDialog from "./chunks/ProductDialog";
 import ProductTable from "./chunks/ProductTable";
+import { selectTotalQuantity } from "../../store/features/cartSlice";
+import { useAppSelector } from "../../store";
+import {  useNavigate } from "react-router-dom";
 
 const ProductView = () => {
-  const{data:products}=api.product.getAllProducts.useQuery();
+  const { data: products } = api.product.getAllProducts.useQuery({notifyOnChangeProps: "all"});
+  const navigate = useNavigate();
+  const total=useAppSelector(selectTotalQuantity);
  
   return (
-    <div className="realtive md-4">
+    <div className="mx-6">
       <h1 className="text-3xl text-center font-bold">Products Lists</h1>
       <div className="flex justify-between">
       <ProductAddEditDialog isEdit={false}>
         <Button className="bg-blue-200 hover:bg-gray-300 text-black font-bold py-2 px-4 rounded my-3 ml-3">Add Product</Button>
       </ProductAddEditDialog>
-      <div className="mr-3">
-        <ShoppingBasketIcon className="w-10 h-10 text-blue-300" />
-
-        {/* <span
-          class="absolute top-0 right-5 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-pink-500 rounded-full">
-          {{ cartItemCount }}
-        </span> */}
-      </div>
+    <div className="relative flex">
+          <span className="absolute top-0 right-0  rounded-full px-2 py-1 text-xs font-semibold transform translate-x-1/2 -translate-y-1/2">
+            {total}
+          </span>
+          <LucideShoppingBasket
+            className="h-6 w-6"
+            onClick={() => navigate('cart')}
+          />
+        </div>
       </div>
      
       <ProductTable columns={columns} data={products ?? []} />

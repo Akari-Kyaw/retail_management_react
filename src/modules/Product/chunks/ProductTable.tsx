@@ -56,7 +56,7 @@ export function ProductTable<TData, TValue>({
   })
 
   return (
-    <div className=" w-full ml-3">
+    <div className="">
         <div className="flex items-center py-4">
         <Input
           placeholder="Search Product By Name..."

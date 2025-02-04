@@ -29,3 +29,12 @@ export type UpdateProductType={
 export type DeleteProductType={
     productId:string;
 }
+export type AddCartType={
+    productId: string,
+    name: string,
+    name: string,
+    qty: number,
+    remainingStock: number,
+    sellingPrice: number,
+    created_by: string
+}

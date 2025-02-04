@@ -1,5 +1,5 @@
 import ReactIcon from "@/assets/react.svg"
-
+import Cookie from "js-cookie"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -74,6 +74,7 @@ const LoginView = () => {
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		loginUser({userName: data.username, password: data.password})
 	}
+	Cookie.set("username",form.getValues().username);
 
 	return (
 		<div className="login-container">
