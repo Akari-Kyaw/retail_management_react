@@ -14,6 +14,7 @@ import { Provider } from "react-redux";
 import { store } from "../store";
 import CartView from "../modules/Cart/CartView";
 import Loader from "./Loader";
+import CashierView from "../modules/Cashier/Cashier";
 
 const router = createBrowserRouter([
 	{
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
 			{
 				path: "manager",
 				element: <ManagerView />,
+			},
+			{
+				path: "cashier",
+				element: <CashierView />,
 			},
 		],
 	},

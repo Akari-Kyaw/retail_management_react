@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react"
-import { number, z } from "zod"
+import {  z } from "zod"
 import { toast } from "../../../hooks/use-toast"
 import { useAppDispatch } from "../../../store"
 import { hideLoader, openLoader } from "../../../store/features/loaderSlice"
@@ -11,32 +11,32 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Button } from "../../../components/ui/button"
 import { Input } from "../../../components/ui/input"
 import { ProductType } from "../../../shared/type"
+import { useQueryClient } from "@tanstack/react-query"
 
 const formSchema = z.object({
-    name: z.string({required_error: "Title is required!"}).min(3, {message: "Title must be at least 3 characters long!"}),
-    remainingStock: z.coerce.number({required_error: "Stock is required!"}),
-    profit: z.coerce.number({required_error: "Profit is required!"}),
-    sellingPrice: z.coerce.number({required_error: "Price is required!"}),
-    created_by: z.string({required_error: "Title is required!"}),
-
+    name: z.string({ required_error: "Title is required!" }).min(3, { message: "Title must be at least 3 characters long!" }),
+    remainingStock: z.number({ required_error: "Stock is required!" }),
+    profit: z.number({ required_error: "Profit is required!" }),
+    sellingPrice: z.number({ required_error: "Price is required!" })
 })
 
 type ProductAddEditDialog = {
     children: ReactNode,
     isEdit: boolean,
-    editproduct?:ProductType
+    editproduct?: ProductType
 }
 
-
 const ProductAddEditDialog = (
-    {children, isEdit, editproduct}: ProductAddEditDialog) => {
+    { children, isEdit, editproduct }: ProductAddEditDialog) => {
+
+    const queryClient = useQueryClient();
 
     const dispatch = useAppDispatch();
-    const {mutate:addproducts} = api.product.AddProduct.useMutation({
+    const { mutate: addproducts } = api.product.AddProduct.useMutation({
         onMutate: () => {
             dispatch(openLoader())
         },
-        onError: () => toast({title: "Error", description: "Error while adding todo", variant: "destructive"}),
+        onError: () => toast({ title: "Error", description: "Error while adding product", variant: "destructive" }),
         onSettled: () => {
             setIsDialogOpen(false);
             form.reset();
@@ -45,11 +45,16 @@ const ProductAddEditDialog = (
         },
     })
 
-    const {mutate:updateproduct} = api.product.UpdateProduct.useMutation({
+    const { mutate: updateproduct } = api.product.UpdateProduct.useMutation({
         onMutate: () => {
             dispatch(openLoader())
         },
-        onError: () => toast({title: "Error", description: "Error while adding todo", variant: "destructive"}),
+        onError: () => toast({ title: "Error", description: "Error while adding todo", variant: "destructive" }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['getAllProducts']
+            })
+        },
         onSettled: () => {
             setIsDialogOpen(false);
             form.reset();
@@ -64,17 +69,16 @@ const ProductAddEditDialog = (
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: isEdit ? editproduct?.name : '',
-            remainingStock: isEdit ?  editproduct?.remainingStock : undefined,
+            remainingStock: isEdit ? editproduct?.remainingStock : undefined,
             profit: isEdit ? editproduct?.profit : undefined,
             sellingPrice: isEdit ? editproduct?.sellingPrice : undefined,
-            created_by: isEdit ? editproduct?.created_by : '',
-
         },
     })
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         if (isEdit && editproduct) {
             updateproduct(Object.assign(editproduct, values) as ProductType)
+            console.log(values);
         } else {
             addproducts(values)
         }
@@ -96,60 +100,60 @@ const ProductAddEditDialog = (
                         <FormField
                             control={form.control}
                             name="name"
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Name</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Enter Name..." {...field} />
                                     </FormControl>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
                             name="remainingStock"
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Stock</FormLabel>
                                     <FormControl>
-                                        <Input type="number" placeholder="Enter Stock..." {...field} />
+                                        <Input type="number" placeholder="Enter Stock..." {...field} onChange={(e) => field.onChange(e.target.value === "" ? "" : Number(e.target.value))} />
                                     </FormControl>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
-                         <FormField
-                        control={form.control}
-                        name="sellingPrice"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Price</FormLabel>
-                                <FormControl>
-                                    <Input type="number" placeholder="Enter Price..." {...field} />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                     <FormField
+                        <FormField
+                            control={form.control}
+                            name="sellingPrice"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Price</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" placeholder="Enter Price..." {...field} onChange={(e) => field.onChange(e.target.value === "" ? "" : Number(e.target.value))} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
                             control={form.control}
                             name="profit"
-                            render={({field}) => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Profit</FormLabel>
                                     <FormControl>
-                                        <Input type="number" placeholder="Enter Profit..." {...field} />
+                                        <Input type="number" placeholder="Enter Profit..." {...field} onChange={(e) => field.onChange(e.target.value === "" ? "" : Number(e.target.value))} />
                                     </FormControl>
-                                    <FormMessage/>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
-                      
+
                         <div className={'flex justify-between items-center mt-4 gap-3'}>
                             <Button className={'w-full'} type={'button'} variant={'destructive'}
-                                    onClick={() => setIsDialogOpen(false)}> Close </Button>
-                            <Button className={'w-full'} type={'submit'}>Save</Button>
+                                onClick={() => setIsDialogOpen(false)}> Close </Button>
+                            <Button className={'w-full'} type='submit'>Save</Button>
                         </div>
                     </form>
                 </Form>

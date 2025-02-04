@@ -14,8 +14,7 @@ export type AddProductType={
     name: string,
     remainingStock: number,
     sellingPrice: number,
-    profit: number,
-    created_by: string
+    profit: number
 }
 export type UpdateProductType={
     prodcutId: string,

@@ -9,7 +9,7 @@ import { useAppSelector } from "../../store";
 import {  useNavigate } from "react-router-dom";
 
 const ProductView = () => {
-  const { data: products } = api.product.getAllProducts.useQuery({notifyOnChangeProps: "all"});
+  const { data: products } = api.product.getAllProducts.useQuery();
   const navigate = useNavigate();
   const total=useAppSelector(selectTotalQuantity);
  
