@@ -24,15 +24,24 @@ export const cartSlice = createSlice({
       const existingItem = state.cartItems.find(
         (item) => item.productId === product.productId
       );
+      if(product.remainingStock===0){
+        toast({
+          description: "Product is Out of stock",
+          duration: 500,
+          variant: "destructive",
+        });
+        return;
+      }
 
-      if (existingItem && existingItem.qty < product.remainingStock) {
+       if (existingItem && existingItem.qty < product.remainingStock) {
         existingItem.qty += 1;
       } else if (existingItem?.qty === product.remainingStock) {
         toast({
           description: "Not enought Stock",
-          duration: 300,
+          duration: 500,
           variant: "destructive",
         });
+        
         return;
       } else {
         const cartItem: AddCartType = {
