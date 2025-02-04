@@ -13,6 +13,7 @@ import ManagerView from "../modules/manager/ManagerView";
 import { Provider } from "react-redux";
 import { store } from "../store";
 import CartView from "../modules/Cart/CartView";
+import Loader from "./Loader";
 
 const router = createBrowserRouter([
 	{
@@ -56,6 +57,7 @@ const Wrapper = () => {
 		<>
 			<Provider store={store}>
 				<QueryClientProvider client={queryClient}>
+				<Loader />
 					<Toaster />
 					<RouterProvider router={router}></RouterProvider>
 				</QueryClientProvider>
